@@ -1,6 +1,8 @@
 package com.training.victor.development.network.responses.models
 
-data class ProductionCompaniesItem(val logoPath: String = "",
-                                   val name: String = "",
-                                   val id: Int = 0,
-                                   val originCountry: String = "")
+import com.google.gson.annotations.SerializedName
+
+data class ProductionCompaniesItem(@SerializedName("logo_path") val logoPath: String = "",
+                                   @SerializedName("name") val name: String = "",
+                                   @SerializedName("id") val id: Int = 0,
+                                   @SerializedName("origin_country") val originCountry: String = "")

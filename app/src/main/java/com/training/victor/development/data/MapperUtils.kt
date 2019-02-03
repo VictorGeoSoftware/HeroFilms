@@ -10,6 +10,7 @@ fun FilmItem.toMovieItem(): MovieItem {
         this.originalTitle,
         this.voteAverage,
         this.releaseDate,
-        this.overview
+        this.overview,
+        this.posterPath
     )
 }

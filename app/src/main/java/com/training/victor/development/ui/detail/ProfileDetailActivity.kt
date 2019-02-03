@@ -1,4 +1,4 @@
-package com.training.victor.development.ui
+package com.training.victor.development.ui.detail
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

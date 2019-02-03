@@ -1,4 +1,6 @@
 package com.training.victor.development.network.responses.models
 
-data class SpokenLanguagesItem(val name: String = "",
-                               val iso: String = "")
+import com.google.gson.annotations.SerializedName
+
+data class SpokenLanguagesItem(@SerializedName("name")  val name: String = "",
+                               @SerializedName("iso_639_1")  val iso: String = "")

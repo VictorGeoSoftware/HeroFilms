@@ -1,4 +1,6 @@
 package com.training.victor.development.network.responses.models
 
-data class ProductionCountriesItem(val iso: String = "",
-                                   val name: String = "")
+import com.google.gson.annotations.SerializedName
+
+data class ProductionCountriesItem(@SerializedName("iso_3166_1") val iso: String = "",
+                                   @SerializedName("name") val name: String = "")

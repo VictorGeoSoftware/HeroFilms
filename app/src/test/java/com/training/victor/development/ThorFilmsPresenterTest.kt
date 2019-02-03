@@ -1,13 +1,13 @@
 package com.training.victor.development
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import com.training.victor.development.data.DataManager
-import com.training.victor.development.data.models.ProfileItem
+import com.training.victor.development.data.models.MovieItem
 import com.training.victor.development.network.ThorFilmsRepository
+import com.training.victor.development.network.responses.ThorFilmsResp
 import com.training.victor.development.presenter.ThorFilmsPresenter
+import com.training.victor.development.utils.getMockedMoviesList
+import com.training.victor.development.utils.getMockedThorMoviesResp
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
@@ -54,19 +54,30 @@ class ThorFilmsPresenterTest: ParentUnitTest() {
     // --------------------------------------------- TESTING CASES ---------------------------------------------
     @Test
     fun `should call to profiles list and retrieve a list`() {
-        whenever(thorFilmsRepository.getThorMovies()).thenReturn(Observable.just(arrayListOf(ProfileItem(0, "hhttps"))))
-        thorFilmsPresenter.getProfilesList()
+        val heroName = BuildConfig.APP_HERO
+        val appLang = BuildConfig.APP_LANGUAGE
+        val apiKey = BuildConfig.API_KEY
+
+        val thorFilmsResp = getMockedThorMoviesResp()
+        val moviesArrayList = getMockedMoviesList()
+
+        whenever(thorFilmsRepository.getThorMovies(apiKey, heroName, appLang)).thenReturn(Observable.just(thorFilmsResp))
+        thorFilmsPresenter.getMoviesList()
         testScheduler.triggerActions()
 
-        verify(thorFilmsView, times(1)).onProfilesListReceived(any())
+
+        verify(thorFilmsView, times(1)).onMoviesListReceived(moviesArrayList)
     }
 
     @Test
     fun `should call to profiles list and retrieve an error`() {
-        whenever(thorFilmsRepository.getThorMovies()).thenReturn(Observable.error(Throwable()))
-        thorFilmsPresenter.getProfilesList()
+        val heroName = BuildConfig.APP_HERO
+        val appLang = BuildConfig.APP_LANGUAGE
+        val apiKey = BuildConfig.API_KEY
+        whenever(thorFilmsRepository.getThorMovies(apiKey, heroName, appLang)).thenReturn(Observable.error(Throwable()))
+        thorFilmsPresenter.getMoviesList()
         testScheduler.triggerActions()
 
-        verify(thorFilmsView, times(1)).onProfilesListError()
+        verify(thorFilmsView, times(1)).onMoviesListError()
     }
 }

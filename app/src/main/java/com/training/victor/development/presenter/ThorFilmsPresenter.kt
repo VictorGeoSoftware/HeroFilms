@@ -1,7 +1,8 @@
 package com.training.victor.development.presenter
 
 import com.training.victor.development.data.DataManager
-import com.training.victor.development.data.models.ProfileItem
+import com.training.victor.development.data.models.MovieItem
+import com.training.victor.development.utils.myTrace
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -14,35 +15,38 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
 
     interface ThorFilmsView {
         fun showProgressBar(show: Boolean)
-        fun onProfilesListReceived(profilesList: ArrayList<ProfileItem>)
-        fun onProfilesListError()
+        fun onMoviesListReceived(profilesList: List<MovieItem>)
+        fun onMoviesListError()
     }
 
 
-    /*
-    TODO
 
-    - super hero: Thor -> marketing rules :)
-    - Get Thor films list. Get ensured that more than 10 items are retrieved
-    - Get a complete list, and retrieve a "most featured films" one from it
+    // todo :: retrieve the 5 more rated films
 
+    // todo :: implement detail activity
+        // - presenter and unit testing!
+        // - UI
+        // - Transition effects!
 
-     - Learn about the Builder pattern in Kotlin
-            -> https://stackoverflow.com/questions/45604789/builder-pattern-in-kotlin
-     - Strong and straight with Cucumber, all in with it!!
-     */
+    // todo :: start with cucumber testing scenarios
 
-    fun getProfilesList() {
+    fun getFeaturedMoviesList() {
+        view?.showProgressBar(true)
+    }
+
+    fun getMoviesList() {
         view?.showProgressBar(true)
         compositeDisposable.add(dataManager.getMoviesList()
             .observeOn(androidSchedulers)
             .subscribeOn(subscriberSchedulers)
             .subscribe ({
                 view?.showProgressBar(false)
-                view?.onProfilesListReceived(it)
+                view?.onMoviesListReceived(it)
             }, {
+                myTrace("getMoviesList - error :: ${it.message}")
+                it.printStackTrace()
                 view?.showProgressBar(false)
-                view?.onProfilesListError()
+                view?.onMoviesListError()
             }))
 
     }

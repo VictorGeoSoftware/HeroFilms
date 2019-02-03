@@ -1,7 +1,7 @@
 package com.training.victor.development.di.components
 
-import com.training.victor.development.ui.MainActivity
-import com.training.victor.development.ui.ProfileDetailActivity
+import com.training.victor.development.ui.main.MainActivity
+import com.training.victor.development.ui.detail.ProfileDetailActivity
 import com.training.victor.development.di.modules.PresenterModule
 import com.training.victor.development.di.scopes.ViewScope
 import dagger.Subcomponent

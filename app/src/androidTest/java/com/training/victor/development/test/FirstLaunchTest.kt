@@ -8,7 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import com.training.victor.development.R
 import com.training.victor.development.assertions.RecyclerViewItemCountAssertion.Companion.withItemCount
-import com.training.victor.development.ui.MainActivity
+import com.training.victor.development.ui.main.MainActivity
 import cucumber.api.java.After
 import cucumber.api.java.Before
 import cucumber.api.java.en.And
@@ -20,7 +20,8 @@ import org.junit.Assert
 import org.junit.Rule
 
 class FirstLaunchTest {
-    @Rule val mainActivityTestRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+    @Rule val mainActivityTestRule: ActivityTestRule<MainActivity> = ActivityTestRule(
+        MainActivity::class.java)
     private lateinit var mainActivity: MainActivity
 
     @Before

@@ -1,4 +1,6 @@
 package com.training.victor.development.network.responses.models
 
-data class GenresItem(val name: String = "",
-                      val id: Int = 0)
+import com.google.gson.annotations.SerializedName
+
+data class GenresItem(@SerializedName("name") val name: String = "",
+                      @SerializedName("id") val id: Int = 0)

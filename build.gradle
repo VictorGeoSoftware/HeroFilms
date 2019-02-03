@@ -1,7 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext {
-    apiUrl = '"https://www.themoviedb.org"'
+    apiUrl = '"https://api.themoviedb.org"'
+    imagesUrl = '"https://image.tmdb.org/t/p"'
     apiKey = '"42f5872aac091ec7aadf5adb3aea4205"'
     timeOut = '10000'
     daggerVersion = '2.17'
