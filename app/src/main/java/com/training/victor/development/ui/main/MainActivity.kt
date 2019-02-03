@@ -15,12 +15,17 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
 
+    companion object {
+        private const val MOVIES_LIST = "MOVIES_LIST"
+        private const val FEATURED_MOVIES_LIST = "FEATURED_MOVIES_LIST"
+    }
+
     @Inject lateinit var thorFilmsPresenter: ThorFilmsPresenter
 
-    private val mMoviesList = ArrayList<MovieItem>()
+    private var mMoviesList = ArrayList<MovieItem>()
     private lateinit var mMoviesAdapter: MoviesAdapter
 
-    private val mFeaturedMoviesList = ArrayList<MovieItem>()
+    private var mFeaturedMoviesList = ArrayList<MovieItem>()
     private lateinit var mFeaturedMoviesAdapter: FeaturedMoviesAdapter
 
 
@@ -28,6 +33,17 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as MainApplication).createPresenterComponent().inject(this)
+
+
+        thorFilmsPresenter.view = this
+
+        if (savedInstanceState != null) {
+            mMoviesList = savedInstanceState.getParcelableArrayList(MOVIES_LIST) ?: ArrayList()
+            mFeaturedMoviesList = savedInstanceState.getParcelableArrayList(FEATURED_MOVIES_LIST) ?: ArrayList()
+        } else {
+            thorFilmsPresenter.getMoviesList()
+            thorFilmsPresenter.getFeaturedMoviesList()
+        }
 
         val myGridLayoutManager = LinearLayoutManager(this)
         lstMovies.layoutManager = myGridLayoutManager
@@ -38,9 +54,6 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
         mFeaturedMoviesAdapter = FeaturedMoviesAdapter(supportFragmentManager, mFeaturedMoviesList)
         autoScrollViewPager.adapter = mFeaturedMoviesAdapter
         tabLayoutDotsIndicator.setupWithViewPager(autoScrollViewPager)
-
-        thorFilmsPresenter.view = this
-        thorFilmsPresenter.getMoviesList()
     }
 
     override fun onResume() {
@@ -51,6 +64,12 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
     override fun onPause() {
         super.onPause()
         autoScrollViewPager.stopAutScroll()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putParcelableArrayList(MOVIES_LIST, mMoviesList)
+        outState?.putParcelableArrayList(FEATURED_MOVIES_LIST, mFeaturedMoviesList)
     }
 
     override fun onDestroy() {
@@ -70,17 +89,26 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
         }
     }
 
-    override fun onMoviesListReceived(profilesList: List<MovieItem>) {
+    override fun onMoviesListReceived(moviesList: List<MovieItem>) {
         mMoviesList.clear()
-        mMoviesList.addAll(profilesList)
+        mMoviesList.addAll(moviesList)
         mMoviesAdapter.notifyDataSetChanged()
+    }
 
-        mFeaturedMoviesList.addAll(profilesList)
+    override fun onFeaturedMoviesError() {
+        mFeaturedMoviesList.clear()
+        mFeaturedMoviesAdapter.notifyDataSetChanged()
+        TODO("Some animation or UI component for showing error cause to user")
+    }
+
+    override fun onFeaturedMoviesReceived(featuredMoviesList: List<MovieItem>) {
+        mFeaturedMoviesList.addAll(featuredMoviesList)
         mFeaturedMoviesAdapter.notifyDataSetChanged()
     }
 
     override fun onMoviesListError() {
         mMoviesList.clear()
         mMoviesAdapter.notifyDataSetChanged()
+        TODO("Some animation or UI component for showing error cause to user")
     }
 }

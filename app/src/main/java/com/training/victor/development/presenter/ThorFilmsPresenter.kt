@@ -15,13 +15,15 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
 
     interface ThorFilmsView {
         fun showProgressBar(show: Boolean)
-        fun onMoviesListReceived(profilesList: List<MovieItem>)
+        fun onMoviesListReceived(moviesList: List<MovieItem>)
         fun onMoviesListError()
+        fun onFeaturedMoviesReceived(featuredMoviesList: List<MovieItem>)
+        fun onFeaturedMoviesError()
     }
 
 
 
-    // todo :: retrieve the 5 more rated films
+    // todo :: retrieve the 5 more rated films -> testing also!
 
     // todo :: implement detail activity
         // - presenter and unit testing!
@@ -30,8 +32,21 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
 
     // todo :: start with cucumber testing scenarios
 
+
     fun getFeaturedMoviesList() {
         view?.showProgressBar(true)
+
+        compositeDisposable.add(dataManager.getFeaturedMoviesList()
+            .observeOn(androidSchedulers)
+            .subscribeOn(subscriberSchedulers)
+            .subscribe({
+                view?.showProgressBar(false)
+                view?.onFeaturedMoviesReceived(it)
+            }, {
+                it.printStackTrace()
+                view?.showProgressBar(false)
+                view?.onFeaturedMoviesError()
+            }))
     }
 
     fun getMoviesList() {
@@ -43,7 +58,6 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
                 view?.showProgressBar(false)
                 view?.onMoviesListReceived(it)
             }, {
-                myTrace("getMoviesList - error :: ${it.message}")
                 it.printStackTrace()
                 view?.showProgressBar(false)
                 view?.onMoviesListError()

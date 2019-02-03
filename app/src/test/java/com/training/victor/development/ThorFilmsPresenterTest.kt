@@ -53,7 +53,7 @@ class ThorFilmsPresenterTest: ParentUnitTest() {
 
     // --------------------------------------------- TESTING CASES ---------------------------------------------
     @Test
-    fun `should call to profiles list and retrieve a list`() {
+    fun `should call to movies api and retrieve a list`() {
         val heroName = BuildConfig.APP_HERO
         val appLang = BuildConfig.APP_LANGUAGE
         val apiKey = BuildConfig.API_KEY
@@ -70,7 +70,7 @@ class ThorFilmsPresenterTest: ParentUnitTest() {
     }
 
     @Test
-    fun `should call to profiles list and retrieve an error`() {
+    fun `should call to movies api and retrieve an error`() {
         val heroName = BuildConfig.APP_HERO
         val appLang = BuildConfig.APP_LANGUAGE
         val apiKey = BuildConfig.API_KEY
@@ -79,5 +79,16 @@ class ThorFilmsPresenterTest: ParentUnitTest() {
         testScheduler.triggerActions()
 
         verify(thorFilmsView, times(1)).onMoviesListError()
+    }
+
+    @Test
+    fun `should call to profiles api and retrieve the most featured movies`() {
+
+
+        thorFilmsPresenter.getFeaturedMoviesList()
+        testScheduler.triggerActions()
+
+        val featuredMoviesList = getMockedMoviesList()
+        verify(thorFilmsView, times(1)).onFeaturedMoviesReceived(featuredMoviesList)
     }
 }
