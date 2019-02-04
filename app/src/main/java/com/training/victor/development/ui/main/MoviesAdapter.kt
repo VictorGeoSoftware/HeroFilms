@@ -8,10 +8,12 @@ import com.training.victor.development.BuildConfig
 import com.training.victor.development.R
 import com.training.victor.development.data.Constants.Companion.IMAGE_SMALL
 import com.training.victor.development.data.models.MovieItem
+import com.training.victor.development.ui.MovieClickListener
 import com.training.victor.development.utils.inflate
 import kotlinx.android.synthetic.main.adapter_profile_item.view.*
 
-class MoviesAdapter(private val profilesList: ArrayList<MovieItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MoviesAdapter(private val profilesList: ArrayList<MovieItem>,
+                    private val movieClickListener: MovieClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -24,18 +26,22 @@ class MoviesAdapter(private val profilesList: ArrayList<MovieItem>) : RecyclerVi
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CreatorViewHolder) {
-            holder.bind(profilesList[position])
+            holder.bind(profilesList[position], movieClickListener)
         }
     }
 
     class CreatorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: MovieItem) = with(itemView) {
+        fun bind(movie: MovieItem, movieClickListener: MovieClickListener) = with(itemView) {
             txtTitle.text = movie.title
             txtReleaseDate.text = movie.releaseDate
             txtOverView.text = movie.overview
 
             val imageUrl = BuildConfig.IMAGES_URL + IMAGE_SMALL + movie.posterPath
             Glide.with(itemView.context).load(imageUrl).into(imageMoviePoster)
+
+            itemView.setOnClickListener {
+                movieClickListener.onMovieClick(movie)
+            }
         }
     }
 }

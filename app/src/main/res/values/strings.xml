@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HeroFilms</string>
+    <string name="featured_movies_error">Something wrong went with featured movies</string>
+    <string name="movies_list_error">Somethind wrong went with movies list</string>
+    <string name="movie_details_error">Error retrieving detailed info</string>
+    <string name="movie_runtime">%1$s min</string>
+    <string name="movie_rate">%1$s (imdb rate)</string>
 </resources>

@@ -17,6 +17,6 @@ interface ThorFilmsRepository {
                       @Query("language") language: String): Observable<ThorFilmsResp>
 
     @GET("/3/movie/{movie_id}")
-    fun getMovieDetail(@Path("id") id: Int,
+    fun getMovieDetail(@Path("movie_id") movieId: Int,
                        @Query("api_key") apiKey: String): Observable<FilmDetailResp>
 }

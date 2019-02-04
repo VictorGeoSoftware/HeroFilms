@@ -1,8 +1,8 @@
 package com.training.victor.development.presenter
 
 import com.training.victor.development.data.DataManager
+import com.training.victor.development.data.models.MovieDetailItem
 import com.training.victor.development.data.models.MovieItem
-import com.training.victor.development.utils.myTrace
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -19,14 +19,12 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
         fun onMoviesListError()
         fun onFeaturedMoviesReceived(featuredMoviesList: List<MovieItem>)
         fun onFeaturedMoviesError()
+        fun onMovieDetailsReceived(movieDetails: MovieDetailItem)
+        fun onMovieDetailsError(throwable: Throwable)
     }
 
 
-
-    // todo :: retrieve the 5 more rated films -> testing also!
-
     // todo :: implement detail activity
-        // - presenter and unit testing!
         // - UI
         // - Transition effects!
 
@@ -63,6 +61,22 @@ class ThorFilmsPresenter @Inject constructor(private val androidSchedulers: Sche
                 view?.onMoviesListError()
             }))
 
+    }
+
+    fun getMovieDetails(movieId: Int) {
+        view?.showProgressBar(true)
+
+        compositeDisposable.add(dataManager.getMovieDetails(movieId)
+            .observeOn(androidSchedulers)
+            .subscribeOn(subscriberSchedulers)
+            .subscribe({
+                view?.showProgressBar(false)
+                view?.onMovieDetailsReceived(it)
+            },{
+                it.printStackTrace()
+                view?.showProgressBar(false)
+                view?.onMovieDetailsError(it)
+            }))
     }
 
     override fun destroy() {

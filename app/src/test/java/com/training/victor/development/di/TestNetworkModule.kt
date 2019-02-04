@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 
 class TestNetworkModule: NetworkModule() {
     override fun provideProfileRetrofit(retrofit: Retrofit): ThorFilmsRepository {
-        return super.provideProfileRetrofit(retrofit)
-//        return Mockito.mock(ThorFilmsRepository::class.java)
+//        return super.provideProfileRetrofit(retrofit)
+        return Mockito.mock(ThorFilmsRepository::class.java)
     }
 }

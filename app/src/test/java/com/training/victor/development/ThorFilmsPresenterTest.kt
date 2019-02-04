@@ -1,11 +1,13 @@
 package com.training.victor.development
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.training.victor.development.data.DataManager
-import com.training.victor.development.data.models.MovieItem
+import com.training.victor.development.data.toMovieDetailItem
 import com.training.victor.development.network.ThorFilmsRepository
-import com.training.victor.development.network.responses.ThorFilmsResp
 import com.training.victor.development.presenter.ThorFilmsPresenter
+import com.training.victor.development.utils.getMockedMovieDetailResp
 import com.training.victor.development.utils.getMockedMoviesList
 import com.training.victor.development.utils.getMockedThorMoviesResp
 import io.reactivex.Observable
@@ -16,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
+import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
 /**
@@ -82,13 +85,44 @@ class ThorFilmsPresenterTest: ParentUnitTest() {
     }
 
     @Test
-    fun `should call to profiles api and retrieve the most featured movies`() {
+    fun `should call to movies api and retrieve the most featured movies`() {
+        val heroName = BuildConfig.APP_HERO
+        val appLang = BuildConfig.APP_LANGUAGE
+        val apiKey = BuildConfig.API_KEY
+        val response = getMockedThorMoviesResp()
 
-
+        whenever(thorFilmsRepository.getThorMovies(apiKey, heroName, appLang)).thenReturn(Observable.just(response))
         thorFilmsPresenter.getFeaturedMoviesList()
         testScheduler.triggerActions()
 
         val featuredMoviesList = getMockedMoviesList()
         verify(thorFilmsView, times(1)).onFeaturedMoviesReceived(featuredMoviesList)
+    }
+
+    @Test
+    fun `should call to movie detail and retrieve the corresponding movie detail info`() {
+        val movieResp = getMockedMovieDetailResp()
+        val apiKey = BuildConfig.API_KEY
+        val movieId = 10195
+
+        whenever(thorFilmsRepository.getMovieDetail(movieId, apiKey)).thenReturn(Observable.just(movieResp))
+        thorFilmsPresenter.getMovieDetails(movieId)
+        testScheduler.triggerActions()
+
+        val movieDetails = movieResp.toMovieDetailItem()
+        verify(thorFilmsView, times(1)).onMovieDetailsReceived(movieDetails)
+    }
+
+    @Test
+    fun `should call to movie detail and retrieve some error`() {
+        val throwable = Throwable(TimeoutException())
+        val apiKey = BuildConfig.API_KEY
+        val movieId = 10195
+
+        whenever(thorFilmsRepository.getMovieDetail(movieId, apiKey)).thenReturn(Observable.error(throwable))
+        thorFilmsPresenter.getMovieDetails(movieId)
+        testScheduler.triggerActions()
+
+        verify(thorFilmsView, times(1)).onMovieDetailsError(throwable)
     }
 }

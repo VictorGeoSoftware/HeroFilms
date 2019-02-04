@@ -6,14 +6,18 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.training.victor.development.MainApplication
 import com.training.victor.development.R
+import com.training.victor.development.data.models.MovieDetailItem
 import com.training.victor.development.data.models.MovieItem
 import com.training.victor.development.presenter.ThorFilmsPresenter
+import com.training.victor.development.ui.MovieClickListener
+import com.training.victor.development.ui.detail.MovieDetailActivity
 import com.training.victor.development.ui.utils.SpaceDecorator
 import com.training.victor.development.utils.getDpFromValue
+import com.training.victor.development.utils.showRequestErrorMessage
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
+class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView, MovieClickListener {
 
     companion object {
         private const val MOVIES_LIST = "MOVIES_LIST"
@@ -48,10 +52,10 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
         val myGridLayoutManager = LinearLayoutManager(this)
         lstMovies.layoutManager = myGridLayoutManager
         lstMovies.addItemDecoration(SpaceDecorator(getDpFromValue(10)))
-        mMoviesAdapter = MoviesAdapter(mMoviesList)
+        mMoviesAdapter = MoviesAdapter(mMoviesList, this)
         lstMovies.adapter = mMoviesAdapter
 
-        mFeaturedMoviesAdapter = FeaturedMoviesAdapter(supportFragmentManager, mFeaturedMoviesList)
+        mFeaturedMoviesAdapter = FeaturedMoviesAdapter(supportFragmentManager, mFeaturedMoviesList, this)
         autoScrollViewPager.adapter = mFeaturedMoviesAdapter
         tabLayoutDotsIndicator.setupWithViewPager(autoScrollViewPager)
     }
@@ -78,6 +82,12 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
     }
 
 
+    // ----------------------------------------------------------------------------------------------------------
+    // --------------------------------------------- USER INTERACTION -------------------------------------------
+    override fun onMovieClick(movie: MovieItem) {
+        MovieDetailActivity.loadMovieDetailActivity(this, movie.id)
+    }
+
 
     // ----------------------------------------------------------------------------------------------------------
     // --------------------------------------------- PRESENTER VIEW ---------------------------------------------
@@ -95,10 +105,14 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
         mMoviesAdapter.notifyDataSetChanged()
     }
 
+    override fun onMovieDetailsReceived(movieDetails: MovieDetailItem) { }
+
+    override fun onMovieDetailsError(throwable: Throwable) { }
+
     override fun onFeaturedMoviesError() {
         mFeaturedMoviesList.clear()
         mFeaturedMoviesAdapter.notifyDataSetChanged()
-        TODO("Some animation or UI component for showing error cause to user")
+        showRequestErrorMessage(getString(R.string.featured_movies_error))
     }
 
     override fun onFeaturedMoviesReceived(featuredMoviesList: List<MovieItem>) {
@@ -109,6 +123,6 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
     override fun onMoviesListError() {
         mMoviesList.clear()
         mMoviesAdapter.notifyDataSetChanged()
-        TODO("Some animation or UI component for showing error cause to user")
+        showRequestErrorMessage(getString(R.string.movies_list_error))
     }
 }

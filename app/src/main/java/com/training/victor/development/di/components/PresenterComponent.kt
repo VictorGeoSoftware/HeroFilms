@@ -1,7 +1,7 @@
 package com.training.victor.development.di.components
 
 import com.training.victor.development.ui.main.MainActivity
-import com.training.victor.development.ui.detail.ProfileDetailActivity
+import com.training.victor.development.ui.detail.MovieDetailActivity
 import com.training.victor.development.di.modules.PresenterModule
 import com.training.victor.development.di.scopes.ViewScope
 import dagger.Subcomponent
@@ -19,5 +19,5 @@ import dagger.Subcomponent
 @Subcomponent(modules = [PresenterModule::class])
 interface PresenterComponent {
     fun inject(target: MainActivity)
-    fun inject(target: ProfileDetailActivity)
+    fun inject(target: MovieDetailActivity)
 }

@@ -1,6 +1,7 @@
 package com.training.victor.development.data
 
 import com.training.victor.development.BuildConfig
+import com.training.victor.development.data.models.MovieDetailItem
 import com.training.victor.development.data.models.MovieItem
 import com.training.victor.development.network.ThorFilmsRepository
 import com.training.victor.development.utils.myTrace
@@ -31,5 +32,9 @@ class DataManager(private val thorFilmsRepository: ThorFilmsRepository) {
             .toList().toObservable()
     }
 
+    fun getMovieDetails(movieId: Int): Observable<MovieDetailItem> {
+        return thorFilmsRepository.getMovieDetail(movieId, BuildConfig.API_KEY)
+            .map { it.toMovieDetailItem() }
+    }
 
 }
