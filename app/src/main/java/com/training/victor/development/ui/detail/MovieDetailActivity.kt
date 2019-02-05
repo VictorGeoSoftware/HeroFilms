@@ -1,10 +1,18 @@
 package com.training.victor.development.ui.detail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.training.victor.development.BuildConfig
 import com.training.victor.development.MainApplication
 import com.training.victor.development.R
@@ -15,7 +23,6 @@ import com.training.victor.development.presenter.ThorFilmsPresenter
 import com.training.victor.development.utils.showRequestErrorMessage
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import javax.inject.Inject
-import android.net.Uri
 
 
 class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
@@ -27,16 +34,23 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
         private const val EXTRA_SELECTED_MOVIE_ID = "EXTRA_SELECTED_MOVIE_ID"
         private const val DETAILED_MOVIE = "DETAILED_MOVIE"
 
-        fun loadMovieDetailActivity(context: Context , selectedMovieId: Int) {
+        fun loadMovieDetailActivity(
+            context: Context,
+            selectedMovieId: Int,
+            options: ActivityOptionsCompat
+        ) {
             val intent = Intent(context, MovieDetailActivity::class.java)
             intent.putExtra(EXTRA_SELECTED_MOVIE_ID, selectedMovieId)
-            context.startActivity(intent)
+            context.startActivity(intent, options.toBundle())
+            (context as Activity).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
+        supportPostponeEnterTransition()
+        imgDetail.transitionName = getString(R.string.main_transition)
         (application as MainApplication).createPresenterComponent().inject(this)
 
         mThorFilmsPresenter.view = this
@@ -58,6 +72,7 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
     }
 
     override fun onDestroy() {
+        supportFinishAfterTransition()
         super.onDestroy()
         (application as MainApplication).releasePresenterComponent()
     }
@@ -105,6 +120,18 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
         txtOverviewExtended.text = movieDetails.overview
 
         val imageUrl = BuildConfig.IMAGES_URL + IMAGE_BIG + movieDetails.posterPath
-        Glide.with(this).load(imageUrl).into(imgDetail)
+        Glide.with(this).load(imageUrl).listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
+                                      isFirstResource: Boolean): Boolean {
+                supportStartPostponedEnterTransition()
+                return false
+            }
+
+            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                                         dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                supportStartPostponedEnterTransition()
+                return false
+            }
+        }).into(imgDetail)
     }
 }

@@ -5,6 +5,7 @@
                                              android:layout_height="match_parent">
 
     <ImageView
+            android:transitionName="@string/main_transition"
             android:layout_width="0dp"
             android:layout_height="0dp" tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/imgDetail"
@@ -13,6 +14,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="4:3"/>
     <TextView
+            android:transitionName="@string/title_transition"
             tools:text="Thor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

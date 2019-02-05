@@ -1,4 +1,4 @@
-package com.training.victor.development.ui.main
+package com.training.victor.development.ui.views
 
 import android.content.Context
 import android.os.Handler
@@ -14,7 +14,8 @@ class AutoScrollViewPager @JvmOverloads constructor(context: Context, attrs: Att
     private val mHandler = Handler()
     private val turnPageRunnable = Runnable { this.turnPage() }
     private var autoScrollActive = false
-    private var turnPageDelay = DEFAULT_TURN_PAGE_DELAY
+    private var turnPageDelay =
+        DEFAULT_TURN_PAGE_DELAY
 
     init {
         init()

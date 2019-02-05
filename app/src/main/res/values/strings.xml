@@ -5,4 +5,6 @@
     <string name="movie_details_error">Error retrieving detailed info</string>
     <string name="movie_runtime">%1$s min</string>
     <string name="movie_rate">%1$s (imdb rate)</string>
+    <string name="main_transition">main_transition</string>
+    <string name="title_transition">title_transition</string>
 </resources>
