@@ -5,20 +5,21 @@
                                              android:layout_height="match_parent">
 
     <ImageView
-            android:transitionName="imagePoster"
+            android:transitionName="@string/main_transition"
             android:layout_width="0dp"
             android:layout_height="0dp" tools:srcCompat="@tools:sample/avatars"
-            android:id="@+id/imageMoviePoster"
+            android:id="@+id/imgDetail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintDimensionRatio="4:3"/>
     <TextView
+            android:transitionName="@string/title_transition"
             tools:text="Thor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txtTitle"
-            app:layout_constraintTop_toBottomOf="@+id/imageMoviePoster" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/imgDetail" android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
             android:textAppearance="@style/TitleText"/>
     <TextView
@@ -54,15 +55,23 @@
             android:textAppearance="@style/NormalText"
             android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/txtRate"
             app:layout_constraintStart_toEndOf="@+id/txtRuntime" android:layout_marginStart="32dp"/>
-    <TextView
-            android:textSize="14sp"
-            tools:text="TextView quite long"
+    <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/txtOverviewExtended"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp" android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:textAppearance="@style/NormalText"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/txtUrl"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtRuntime" android:id="@+id/frameLayoutTransition">
+
+        <TextView
+                android:textSize="14sp"
+                tools:text="TextView quite long"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/txtOverviewExtended"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp" android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:textAppearance="@style/NormalText"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/txtUrl"/>
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
