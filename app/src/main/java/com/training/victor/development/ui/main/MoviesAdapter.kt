@@ -40,7 +40,7 @@ class MoviesAdapter(private val profilesList: ArrayList<MovieItem>,
             Glide.with(itemView.context).load(imageUrl).into(imageMoviePoster)
 
             itemView.setOnClickListener {
-                movieClickListener.onMovieClick(movie)
+                movieClickListener.onMovieClick(imageMoviePoster, movie)
             }
         }
     }

@@ -5,7 +5,7 @@
                                              android:layout_height="match_parent">
 
     <ImageView
-            android:transitionName="@string/img_poster"
+            android:transitionName="imagePoster"
             android:layout_width="0dp"
             android:layout_height="0dp" tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/imageMoviePoster"

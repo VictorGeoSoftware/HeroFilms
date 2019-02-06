@@ -7,7 +7,7 @@
         android:orientation="vertical">
 
     <ImageView
-            android:transitionName="@string/img_poster"
+            android:transitionName="imagePoster"
             android:layout_width="@dimen/movie_item_image_size"
             android:layout_height="@dimen/movie_item_image_size" tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/imageMoviePoster" android:layout_marginTop="8dp"

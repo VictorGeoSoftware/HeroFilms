@@ -1,9 +1,14 @@
 package com.training.victor.development.ui.main
 
+import android.app.ActivityOptions
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.ImageView
 import com.training.victor.development.MainApplication
 import com.training.victor.development.R
 import com.training.victor.development.data.models.MovieDetailItem
@@ -84,8 +89,23 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView, Movi
 
     // ----------------------------------------------------------------------------------------------------------
     // --------------------------------------------- USER INTERACTION -------------------------------------------
-    override fun onMovieClick(movie: MovieItem) {
-        MovieDetailActivity.loadMovieDetailActivity(this, movie.id)
+    // todo:: transition desde recyclerview a imageview!
+    override fun onMovieClick(imgMovie: ImageView, movie: MovieItem) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            /*
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                sharedImageView,
+                ViewCompat.getTransitionName(sharedImageView));
+             */
+
+            val options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this, imgMovie, ViewCompat.getTransitionName(imgMovie)!!)
+            MovieDetailActivity.loadMovieDetailActivity(this, options, movie.id)
+        } else {
+            MovieDetailActivity.loadMovieDetailActivity(this, null, movie.id)
+        }
     }
 
 

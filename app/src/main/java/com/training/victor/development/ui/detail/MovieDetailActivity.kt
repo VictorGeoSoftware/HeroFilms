@@ -1,8 +1,12 @@
 package com.training.victor.development.ui.detail
 
-import android.content.Context
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.training.victor.development.BuildConfig
@@ -15,7 +19,6 @@ import com.training.victor.development.presenter.ThorFilmsPresenter
 import com.training.victor.development.utils.showRequestErrorMessage
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import javax.inject.Inject
-import android.net.Uri
 
 
 class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView {
@@ -27,10 +30,16 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
         private const val EXTRA_SELECTED_MOVIE_ID = "EXTRA_SELECTED_MOVIE_ID"
         private const val DETAILED_MOVIE = "DETAILED_MOVIE"
 
-        fun loadMovieDetailActivity(context: Context , selectedMovieId: Int) {
-            val intent = Intent(context, MovieDetailActivity::class.java)
+        // TODO :: mirar -> https://mikescamell.com/shared-element-transitions-part-4-recyclerview/index.html
+        fun loadMovieDetailActivity(activity: Activity, activityOptions: ActivityOptionsCompat?, selectedMovieId: Int) {
+            val intent = Intent(activity, MovieDetailActivity::class.java)
             intent.putExtra(EXTRA_SELECTED_MOVIE_ID, selectedMovieId)
-            context.startActivity(intent)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.startActivity(intent, activityOptions?.toBundle())
+            } else {
+                activity.startActivity(intent)
+            }
         }
     }
 
@@ -105,6 +114,6 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
         txtOverviewExtended.text = movieDetails.overview
 
         val imageUrl = BuildConfig.IMAGES_URL + IMAGE_BIG + movieDetails.posterPath
-        Glide.with(this).load(imageUrl).into(imgDetail)
+        Glide.with(this).load(imageUrl).into(imageMoviePoster)
     }
 }
