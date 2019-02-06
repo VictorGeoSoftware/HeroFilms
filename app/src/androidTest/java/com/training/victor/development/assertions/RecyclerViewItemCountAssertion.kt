@@ -12,7 +12,7 @@ import org.hamcrest.Matcher
  * Created by victorpalmacarrasco on 29/8/18.
  * ${APP_NAME}
  */
-class RecyclerViewItemCountAssertion(var matcher: Matcher<Int>) : ViewAssertion {
+class RecyclerViewItemCountAssertion(private var matcher: Matcher<Int>) : ViewAssertion {
 
 
     companion object {

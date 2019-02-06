@@ -1,11 +1,17 @@
 package com.training.victor.development.test
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.Espresso.pressBack
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.swipeLeft
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import android.support.test.espresso.intent.Intents
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
+import android.support.v7.widget.RecyclerView
 import com.training.victor.development.R
 import com.training.victor.development.assertions.RecyclerViewItemCountAssertion.Companion.withItemCount
 import com.training.victor.development.ui.main.MainActivity
@@ -15,6 +21,8 @@ import cucumber.api.java.en.And
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert
 import org.junit.Rule
@@ -26,6 +34,12 @@ class FirstLaunchTest {
 
     @Before
     fun setUp() {
+
+        //make espresso wait for RXJava
+        RxJavaPlugins.setIoSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+        RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+
         Intents.init()
         mainActivityTestRule.launchActivity(Intent())
         mainActivity = mainActivityTestRule.activity
@@ -44,19 +58,34 @@ class FirstLaunchTest {
         Assert.assertNotNull(mainActivity)
     }
 
-    @When("home screen is shown")
-    fun home_screen_is_shown() {
-        onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    @When("main view screen is shown")
+    fun main_view_screen_is_shown() {
+        onView(withId(R.id.lstMovies)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        onView(withId(R.id.autoScrollViewPager)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
-    @And("profiles list is requested")
-    fun profiles_list_is_requested() {
-//        onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    @And("both of movies list are fulfilled")
+    fun both_of_movies_list_are_fulfilled() {
+//        Thread.sleep(1000)
+        onView(withId(R.id.lstMovies)).check(withItemCount(greaterThan(1)))
+        onView(withId(R.id.autoScrollViewPager)).perform(swipeLeft())
     }
 
-    @Then("list is fulfilled")
-    fun list_is_fulfilled() {
-        onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.lstMovies)).check(withItemCount(greaterThan(0)))
+    @And("a movie from movies list is selected")
+    fun a_movie_from_movies_list_is_selected() {
+        onView(withId(R.id.lstMovies)).perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
+    }
+
+    @And("^a movie from featured movies list is selected")
+    fun a_movie_from_featured_movies_list_is_selected() {
+        onView(withId(R.id.autoScrollViewPager)).perform(click())
+    }
+
+    @Then("I see the detail activity with all movie info")
+    fun i_see_the_detail_activity_with_all_movie_info() {
+        Thread.sleep(1000)
+        onView(withId(R.id.imgDetail)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+//        Thread.sleep(1000)
+        pressBack()
     }
 }
