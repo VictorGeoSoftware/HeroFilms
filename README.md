@@ -1,5 +1,8 @@
 Android application project for showing Thor films
 
+Selected API
+https://www.themoviedb.org/
+
 Architecture.
 This application has been developed following MVP architecture, 
 with a DataManager class ruling into the business layer, and several
