@@ -1,6 +1,5 @@
 package com.training.victor.development.ui.detail
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -8,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -42,7 +43,6 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
             val intent = Intent(context, MovieDetailActivity::class.java)
             intent.putExtra(EXTRA_SELECTED_MOVIE_ID, selectedMovieId)
             context.startActivity(intent, options.toBundle())
-            (context as Activity).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 
@@ -50,8 +50,13 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
         supportPostponeEnterTransition()
-        imgDetail.transitionName = getString(R.string.main_transition)
         (application as MainApplication).createPresenterComponent().inject(this)
+
+        imgDetail.transitionName = getString(R.string.main_transition)
+
+        val fadeTransition = TransitionInflater.from(this).inflateTransition(R.transition.transition_fade)
+        fadeTransition.duration = 500
+        TransitionManager.beginDelayedTransition(frameLayoutTransition, fadeTransition)
 
         mThorFilmsPresenter.view = this
 
@@ -69,6 +74,10 @@ class MovieDetailActivity: AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         mSelectedMovie?.let { outState?.putParcelable(DETAILED_MOVIE, mSelectedMovie) }
+    }
+
+    override fun onBackPressed() {
+        finishAfterTransition()
     }
 
     override fun onDestroy() {

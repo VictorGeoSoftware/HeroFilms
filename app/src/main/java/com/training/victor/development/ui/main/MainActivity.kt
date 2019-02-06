@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView, Movi
             ActivityOptionsCompat.makeSceneTransitionAnimation(this, transitionImage)
         }
 
-
         MovieDetailActivity.loadMovieDetailActivity(this, movie.id, options)
     }
 
