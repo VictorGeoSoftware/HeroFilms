@@ -14,7 +14,6 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         // Environment variables
         buildConfigField "int", "TIME_OUT", rootProject.ext.timeOut
@@ -23,12 +22,17 @@ android {
         buildConfigField "String", "API_KEY", rootProject.ext.apiKey
         buildConfigField "String", "APP_HERO", rootProject.ext.selectedHero
         buildConfigField "String", "APP_LANGUAGE", rootProject.ext.commonLanguage
+        buildConfigField "String", "TEST_TAGS", "\"${getTestTags()}\""
 
         // Cucumber settings
         testApplicationId 'com.training.victor.development.test'
         testInstrumentationRunner "com.training.victor.development.test.Instrumentation"
     }
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -41,6 +45,7 @@ android {
     }
     productFlavors {
     }
+    buildToolsVersion '28.0.3'
 }
 
 androidExtensions {
@@ -61,7 +66,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
-    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2')
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
     // Cucumber
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
@@ -92,4 +97,8 @@ dependencies {
     // Design support
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
+}
+
+def getTestTags() {
+    return project.hasProperty("tags") ? project.getProperties().get("tags") : ""
 }

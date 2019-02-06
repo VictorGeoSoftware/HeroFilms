@@ -33,57 +33,57 @@ class SecondLaunchTest {
         MainActivity::class.java)
     private lateinit var mainActivity: MainActivity
 
-    @Before
+    @Before("@secondCase")
     fun setUp() {
 
-//        //make espresso wait for RXJava
-//        RxJavaPlugins.setIoSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
-//        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
-//        RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
-//
-//        Intents.init()
-//        mainActivityTestRule.launchActivity(Intent())
-//        mainActivity = mainActivityTestRule.activity
+        //make espresso wait for RXJava
+        RxJavaPlugins.setIoSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+        RxJavaPlugins.setNewThreadSchedulerHandler { Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR) }
+
+        Intents.init()
+        mainActivityTestRule.launchActivity(Intent())
+        mainActivity = mainActivityTestRule.activity
     }
 
-    @After
+    @After("@secondCase")
     fun tearDown() {
-//        Intents.release()
-//        mainActivity.finishAffinity()
+        Intents.release()
+        mainActivity.finishAffinity()
     }
 
 
     // --------------------------------------------- TEST CASES ---------------------------------------------
-//    @Given("^a user launch the app for first time")
-//    fun a_user_launch_the_app_for_first_time() {
-//        Assert.assertNotNull(mainActivity)
-//    }
+    @Given("the app launched")
+    fun the_app_launched() {
+        Assert.assertNotNull(mainActivity)
+    }
 
-//    @When("main view screen is shown 2")
-//    fun main_view_screen_is_shown_2() {
-//        onView(withId(R.id.lstMovies))
-//            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//        onView(withId(R.id.autoScrollViewPager))
-//            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//    }
-//
-//    @And("both of movies list are fulfilled 2")
-//    fun both_of_movies_list_are_fulfilled_2() {
-//        onView(withId(R.id.lstMovies))
-//            .check(RecyclerViewItemCountAssertion.withItemCount(Matchers.greaterThan(1)))
-//        onView(withId(R.id.autoScrollViewPager)).perform(ViewActions.swipeLeft())
-//    }
-//
-//    @And("^a movie from featured movies list is selected")
-//    fun a_movie_from_featured_movies_list_is_selected() {
-//        onView(withId(R.id.autoScrollViewPager)).perform(click())
-//    }
-//
-//    @Then("I see the detail activity with all movie info 2")
-//    fun i_see_the_detail_activity_with_all_movie_info_2() {
-//        Thread.sleep(500)
-//        onView(withId(R.id.imgDetail))
-//            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
-//        pressBack()
-//    }
+    @When("main view screen shows up")
+    fun main_view_screen_shows_up() {
+        onView(withId(R.id.lstMovies))
+            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(withId(R.id.autoScrollViewPager))
+            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+    }
+
+    @And("both movies and featured movies list are fulfilled")
+    fun both_movies_and_featured_movies_list_are_fulfilled() {
+        onView(withId(R.id.lstMovies))
+            .check(RecyclerViewItemCountAssertion.withItemCount(Matchers.greaterThan(1)))
+        onView(withId(R.id.autoScrollViewPager)).perform(ViewActions.swipeLeft())
+    }
+
+    @And("^a movie from featured movies list is selected")
+    fun a_movie_from_featured_movies_list_is_selected() {
+        onView(withId(R.id.autoScrollViewPager)).perform(click())
+    }
+
+    @Then("I see detail activity with the complete info")
+    fun i_see_detail_activity_with_the_complete_info() {
+        Thread.sleep(500)
+        onView(withId(R.id.imgDetail))
+            .check(ViewAssertions.matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        pressBack()
+    }
 }

@@ -32,7 +32,7 @@ class FirstLaunchTest {
         MainActivity::class.java)
     private lateinit var mainActivity: MainActivity
 
-    @Before
+    @Before("@firstCase")
     fun setUp() {
 
         //make espresso wait for RXJava
@@ -45,7 +45,7 @@ class FirstLaunchTest {
         mainActivity = mainActivityTestRule.activity
     }
 
-    @After
+    @After("@firstCase")
     fun tearDown() {
         Intents.release()
         mainActivity.finishAffinity()
@@ -66,7 +66,6 @@ class FirstLaunchTest {
 
     @And("both of movies list are fulfilled")
     fun both_of_movies_list_are_fulfilled() {
-//        Thread.sleep(1000)
         onView(withId(R.id.lstMovies)).check(withItemCount(greaterThan(1)))
         onView(withId(R.id.autoScrollViewPager)).perform(swipeLeft())
     }
@@ -76,16 +75,10 @@ class FirstLaunchTest {
         onView(withId(R.id.lstMovies)).perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
     }
 
-    @And("^a movie from featured movies list is selected")
-    fun a_movie_from_featured_movies_list_is_selected() {
-        onView(withId(R.id.autoScrollViewPager)).perform(click())
-    }
-
     @Then("I see the detail activity with all movie info")
     fun i_see_the_detail_activity_with_all_movie_info() {
-        Thread.sleep(1000)
+        Thread.sleep(500)
         onView(withId(R.id.imgDetail)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        Thread.sleep(1000)
         pressBack()
     }
 }
