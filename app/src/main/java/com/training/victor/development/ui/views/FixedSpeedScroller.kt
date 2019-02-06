@@ -1,4 +1,4 @@
-package com.training.victor.development.ui.main
+package com.training.victor.development.ui.views
 
 import android.content.Context
 import android.view.animation.Interpolator
@@ -19,12 +19,16 @@ class FixedSpeedScroller : Scroller {
 
     override fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int, duration: Int) {
         // Ignore received duration, use fixed one instead
-        super.startScroll(startX, startY, dx, dy, SCROLL_DURATION)
+        super.startScroll(startX, startY, dx, dy,
+            SCROLL_DURATION
+        )
     }
 
     override fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int) {
         // Ignore received duration, use fixed one instead
-        super.startScroll(startX, startY, dx, dy, SCROLL_DURATION)
+        super.startScroll(startX, startY, dx, dy,
+            SCROLL_DURATION
+        )
     }
 
     companion object {

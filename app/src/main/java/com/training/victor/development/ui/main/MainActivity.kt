@@ -1,7 +1,5 @@
 package com.training.victor.development.ui.main
 
-import android.app.ActivityOptions
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.ViewCompat
@@ -9,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.training.victor.development.MainApplication
 import com.training.victor.development.R
 import com.training.victor.development.data.models.MovieDetailItem
@@ -16,6 +15,8 @@ import com.training.victor.development.data.models.MovieItem
 import com.training.victor.development.presenter.ThorFilmsPresenter
 import com.training.victor.development.ui.MovieClickListener
 import com.training.victor.development.ui.detail.MovieDetailActivity
+import com.training.victor.development.ui.main.adapters.FeaturedMoviesAdapter
+import com.training.victor.development.ui.main.adapters.MoviesAdapter
 import com.training.victor.development.ui.utils.SpaceDecorator
 import com.training.victor.development.utils.getDpFromValue
 import com.training.victor.development.utils.showRequestErrorMessage
@@ -60,7 +61,11 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView, Movi
         mMoviesAdapter = MoviesAdapter(mMoviesList, this)
         lstMovies.adapter = mMoviesAdapter
 
-        mFeaturedMoviesAdapter = FeaturedMoviesAdapter(supportFragmentManager, mFeaturedMoviesList, this)
+        mFeaturedMoviesAdapter = FeaturedMoviesAdapter(
+            supportFragmentManager,
+            mFeaturedMoviesList,
+            this
+        )
         autoScrollViewPager.adapter = mFeaturedMoviesAdapter
         tabLayoutDotsIndicator.setupWithViewPager(autoScrollViewPager)
     }
@@ -89,23 +94,18 @@ class MainActivity : AppCompatActivity(), ThorFilmsPresenter.ThorFilmsView, Movi
 
     // ----------------------------------------------------------------------------------------------------------
     // --------------------------------------------- USER INTERACTION -------------------------------------------
-    // todo:: transition desde recyclerview a imageview!
-    override fun onMovieClick(imgMovie: ImageView, movie: MovieItem) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    override fun onMovieClick(imageView: ImageView, txtTitle: TextView?, movie: MovieItem) {
+        val transitionImage = android.support.v4.util.Pair<View, String>(imageView, ViewCompat.getTransitionName(imageView)!!)
+        var options: ActivityOptionsCompat?
 
-            /*
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView));
-             */
-
-            val options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(this, imgMovie, ViewCompat.getTransitionName(imgMovie)!!)
-            MovieDetailActivity.loadMovieDetailActivity(this, options, movie.id)
+        options = if (txtTitle != null) {
+            val transitionTitle = android.support.v4.util.Pair<View, String>(txtTitle, ViewCompat.getTransitionName(txtTitle)!!)
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this, transitionImage, transitionTitle)
         } else {
-            MovieDetailActivity.loadMovieDetailActivity(this, null, movie.id)
+            ActivityOptionsCompat.makeSceneTransitionAnimation(this, transitionImage)
         }
+
+        MovieDetailActivity.loadMovieDetailActivity(this, movie.id, options)
     }
 
 

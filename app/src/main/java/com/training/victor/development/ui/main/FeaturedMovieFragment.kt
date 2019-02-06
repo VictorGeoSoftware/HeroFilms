@@ -45,7 +45,7 @@ class FeaturedMovieFragment: Fragment() {
 
         featuredMovieImage.setOnClickListener {
             movie?.let {
-                movieClickListener?.onMovieClick(featuredMovieImage, movie)
+                movieClickListener?.onMovieClick(featuredMovieImage, null, movie)
             }
         }
     }

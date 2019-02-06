@@ -1,4 +1,4 @@
-package com.training.victor.development.ui.main
+package com.training.victor.development.ui.main.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -40,7 +40,7 @@ class MoviesAdapter(private val profilesList: ArrayList<MovieItem>,
             Glide.with(itemView.context).load(imageUrl).into(imageMoviePoster)
 
             itemView.setOnClickListener {
-                movieClickListener.onMovieClick(imageMoviePoster, movie)
+                movieClickListener.onMovieClick(imageMoviePoster, txtTitle, movie)
             }
         }
     }
